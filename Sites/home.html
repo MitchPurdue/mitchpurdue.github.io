@@ -1,10 +1,168 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>EDU</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game with Math Questions</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        overflow: hidden;
+        background-color: antiquewhite;
+    }
+    #game-board {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    canvas {
+        border: 2px solid black;
+    }
+</style>
+</head>
+<body>
+<div id="game-board">
+    <canvas id="gameCanvas" width="1000" height="800"></canvas>
+</div>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
-    </head>
-    <body>
-        <p>gilly</p>
-    </body>
+    // Snake properties
+    let snake = [{x: 200, y: 200}];
+    let dx = 20;
+    let dy = 0;
+    let fruits = [{x: 0, y: 0}, {x: 0, y: 0}];
+    let gameOverFlag = false;
+
+    // Initial game setup
+    function init() {
+        fruits[0] = generateFruit();
+        fruits[1] = generateFruit();
+        setInterval(gameLoop, 100);
+        window.addEventListener("keydown", changeDirection);
+    }
+
+    // Generate random fruit position
+    function generateFruit() {
+        const x = Math.floor(Math.random() * (canvas.width / 20)) * 20;
+        const y = Math.floor(Math.random() * (canvas.height / 20)) * 20;
+        return {x, y};
+    }
+
+    // Game loop
+    function gameLoop() {
+        if (!gameOverFlag) {
+            clearCanvas();
+            drawFruits();
+            moveSnake();
+            drawSnake();
+            checkCollision();
+        }
+    }
+
+    // Clear canvas
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Draw snake
+    function drawSnake() {
+        ctx.fillStyle = "green";
+        snake.forEach(segment => {
+            ctx.fillRect(segment.x, segment.y, 20, 20);
+        });
+    }
+
+    // Move snake
+    function moveSnake() {
+        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+        snake.unshift(head);
+        if (fruits.some(fruit => head.x === fruit.x && head.y === fruit.y)) {
+            fruits.forEach((fruit, index) => {
+                if (head.x === fruit.x && head.y === fruit.y) {
+                    fruits[index] = generateFruit();
+                    askMathQuestion();
+                    return;
+                }
+            });
+        } else {
+            snake.pop();
+        }
+    }
+
+    // Draw fruits
+    function drawFruits() {
+        ctx.fillStyle = "red";
+        fruits.forEach(fruit => {
+            ctx.fillRect(fruit.x, fruit.y, 20, 20);
+        });
+    }
+
+    // Change direction
+    function changeDirection(event) {
+        const key = event.keyCode;
+        if (key === 37 && dx !== 20) { // left
+            dx = -20;
+            dy = 0;
+        } else if (key === 38 && dy !== 20) { // up
+            dx = 0;
+            dy = -20;
+        } else if (key === 39 && dx !== -20) { // right
+            dx = 20;
+            dy = 0;
+        } else if (key === 40 && dy !== -20) { // down
+            dx = 0;
+            dy = 20;
+        }
+    }
+
+    // Check collision
+    function checkCollision() {
+        if (snake[0].x < 0 || snake[0].x >= canvas.width || snake[0].y < 0 || snake[0].y >= canvas.height) {
+            gameOver();
+        }
+        for (let i = 1; i < snake.length; i++) {
+            if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
+                gameOver();
+            }
+        }
+    }
+
+    // Game over
+    function gameOver() {
+        clearInterval(gameLoop);
+        gameOverFlag = true;
+        setTimeout(restartGame, 3000); // Restart after 3 seconds
+    }
+
+    // Restart game
+    function restartGame() {
+        location.reload();
+    }
+
+    // Ask math question
+    function askMathQuestion() {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        const operator = ['+', '-', '*', '/'][Math.floor(Math.random() * 4)];
+        const result = eval(num1 + operator + num2);
+        const answer = prompt(`What is ${num1} ${operator} ${num2}?`);
+        if (parseInt(answer) === result) {
+            // Correct answer
+            alert("Correct!");
+            // Grow snake
+            snake.push({x: snake[snake.length - 1].x, y: snake[snake.length - 1].y});
+        } else {
+            // Incorrect answer
+            alert(`Incorrect! The correct answer is ${result}.`);
+        }
+    }
+
+    // Initialize game
+    init();
+</script>
+</body>
 </html>

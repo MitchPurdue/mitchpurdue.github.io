@@ -1,0 +1,63 @@
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #D8572A;
+  color:#F7B538;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the navigation bar is above other content */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#main-content {
+  padding-top: 100px; /* Ensure content starts below the fixed header */
+}
+
+.section-content {
+  padding: 20px;
+  margin: 20px 0;
+}
+
+footer {
+  background-color: #333; /* Dark footer */
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+/* Add animation for the header */
+header {
+  /* Other styles */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease; /* Smooth fade-in and fade-out transition */
+}
+
+/* Class to show the header with fading animation */
+header.show {
+  opacity: 1; /* Show header */
+}
