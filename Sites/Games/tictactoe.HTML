@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe with Math Questions</title>
+<style>
+  .board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 400px;
+  }
+  .cell {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  body{
+    background-color: antiquewhite;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tic Tac Toe with Math Questions</h1>
+<div id="turn"></div>
+<div class="board" id="board">
+  <div class="cell" data-index="0" onclick="handleClick(0)"></div>
+  <div class="cell" data-index="1" onclick="handleClick(1)"></div>
+  <div class="cell" data-index="2" onclick="handleClick(2)"></div>
+  <div class="cell" data-index="3" onclick="handleClick(3)"></div>
+  <div class="cell" data-index="4" onclick="handleClick(4)"></div>
+  <div class="cell" data-index="5" onclick="handleClick(5)"></div>
+  <div class="cell" data-index="6" onclick="handleClick(6)"></div>
+  <div class="cell" data-index="7" onclick="handleClick(7)"></div>
+  <div class="cell" data-index="8" onclick="handleClick(8)"></div>
+</div>
+
+<script>
+  let currentPlayer = 'X';
+  let board = ['', '', '', '', '', '', '', '', ''];
+
+  function checkWinner() {
+    const winConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    for (let condition of winConditions) {
+      const [a, b, c] = condition;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return board[a];
+      }
+    }
+
+    return null;
+  }
+
+  function handleMathQuestion() {
+    const num1 = Math.floor(Math.random() * 10);
+    const num2 = Math.floor(Math.random() * 10);
+    const answer = num1 + num2;
+    const userAnswer = prompt(`What is ${num1} + ${num2}?`);
+    if (parseInt(userAnswer) === answer) {
+      return true;
+    } else {
+      alert('Incorrect answer. Skipping your turn.');
+      return false;
+    }
+  }
+
+  function updateTurn() {
+    document.getElementById('turn').innerText = `Current turn: ${currentPlayer}`;
+  }
+
+  function handleClick(index) {
+    if (board[index] === '') {
+      if (handleMathQuestion()) {
+        board[index] = currentPlayer;
+        document.getElementById('board').children[index].innerHTML = `<img src="${currentPlayer}.png" alt="${currentPlayer}">`;
+        const winner = checkWinner();
+        if (winner) {
+          alert(`${winner} wins!`);
+          resetGame();
+        } else if (board.every(cell => cell !== '')) {
+          alert("It's a draw!");
+          resetGame();
+        } else {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          updateTurn();
+        }
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        updateTurn();
+      }
+    }
+  }
+
+  function resetGame() {
+    currentPlayer = 'X';
+    board = ['', '', '', '', '', '', '', '', ''];
+    const cells = document.getElementsByClassName('cell');
+    for (let cell of cells) {
+      cell.innerHTML = '';
+    }
+    updateTurn();
+  }
+
+  updateTurn(); // Set initial turn
+</script>
+
+</body>
+</html>
